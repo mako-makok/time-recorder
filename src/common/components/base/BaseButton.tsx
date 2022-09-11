@@ -16,7 +16,7 @@ const BaseButton = ({
   textColor = "#fafafb",
   onClick,
 }: BaseButtonProps) => {
-  const handleClick = onClick && useDebounce(onClick);
+  const handleClick = () => onClick && useDebounce(onClick);
   return (
     <Button
       size="md"
