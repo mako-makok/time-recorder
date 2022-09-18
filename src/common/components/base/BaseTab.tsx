@@ -1,14 +1,15 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { FC } from "react";
 
-type BaseTabItem = {
+interface BaseTabItem {
   name: string;
   children: JSX.Element;
-};
-type BaseTabProps = {
-  items: Array<BaseTabItem>;
-};
+}
+interface BaseTabProps {
+  items: BaseTabItem[];
+}
 
-const BaseTab = ({ items }: BaseTabProps) => {
+const BaseTab: FC<BaseTabProps> = ({ items }) => {
   return (
     <Tabs variant="enclosed" isLazy>
       <TabList padding={0}>

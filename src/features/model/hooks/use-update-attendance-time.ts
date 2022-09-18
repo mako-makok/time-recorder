@@ -2,8 +2,10 @@ import { saveAttendanceTime } from "./save-attendance-time";
 import { AttendanceTime } from "./use-attendance-times";
 
 const useUpdateAttendanceTime = (
-  props: Array<AttendanceTime>
-): Promise<void>[] => {
-  return props.map((attendanceTime) => saveAttendanceTime(attendanceTime));
+  props: AttendanceTime[]
+): Array<Promise<void>> => {
+  return props.map(
+    async (attendanceTime) => await saveAttendanceTime(attendanceTime)
+  );
 };
 export { useUpdateAttendanceTime };

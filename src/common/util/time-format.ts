@@ -1,7 +1,7 @@
 import { stringValueIsNumber } from "./string-util";
 
 const formatHHmm = (value: string | undefined): string => {
-  if (!value || value === "") return "";
+  if (value === undefined || value === "") return "";
   // hhmm形式で6文字以上はありえない
   if (value.length > 5) throw new Error();
 

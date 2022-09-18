@@ -1,22 +1,25 @@
 import { BackgroundProps, Button, Text, ThemingProps } from "@chakra-ui/react";
+import { FC } from "react";
 import { useDebounce } from "../../hooks/use-debounce";
 
-type BaseButtonProps = {
+interface BaseButtonProps {
   label: string;
   background?: BackgroundProps["background"];
   variant?: ThemingProps["variant"];
   textColor?: string;
   onClick?: () => void;
-};
+}
 
-const BaseButton = ({
+const BaseButton: FC<BaseButtonProps> = ({
   label,
   background = "#2352c8",
   variant = "solid",
   textColor = "#fafafb",
   onClick,
-}: BaseButtonProps) => {
-  const handleClick = () => onClick && useDebounce(onClick);
+}) => {
+  const handleClick = (): void => {
+    onClick != null && useDebounce(onClick);
+  };
   return (
     <Button
       size="md"

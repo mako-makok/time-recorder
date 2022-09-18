@@ -1,20 +1,21 @@
 import { Select, Text, VStack } from "@chakra-ui/react";
+import { FC } from "react";
 
-type BaseSelectProps = {
+interface BaseSelectProps {
   title: string;
-  items: {
+  items: Array<{
     content: string;
     value: string;
-  }[];
+  }>;
   onChange: (value: string) => void;
   defaultValue?: string;
-};
-const BaseSelect = ({
+}
+const BaseSelect: FC<BaseSelectProps> = ({
   title,
   items,
   onChange,
   defaultValue,
-}: BaseSelectProps) => {
+}) => {
   return (
     <VStack alignItems={"flex-start"}>
       <Text fontSize="xs" color={"#92929d"}>

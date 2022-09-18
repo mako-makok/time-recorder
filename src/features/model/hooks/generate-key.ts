@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { toYYYYMMDD } from "../../../common/util/date-util";
 import { TimeRecordMethod, TimeRecordMethods } from "../TimeRecordMethod";
 

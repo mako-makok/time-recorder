@@ -1,11 +1,12 @@
 import { ButtonGroup, Center, Container, VStack } from "@chakra-ui/react";
+import { FC } from "react";
 import { AttendanceButton } from "./components/AttendanceButton";
 import { Clock } from "./components/Clock";
 import { LeaveButton } from "./components/LeaveButton";
 import { StepInButton } from "./components/StepInButton";
 import { StepOutButton } from "./components/StepOutButton";
 
-const TimeRecordContainer = () => {
+const TimeRecordContainer: FC = () => {
   const spacing = 4;
   return (
     <Container>

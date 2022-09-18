@@ -1,9 +1,10 @@
-import { Box, Container } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import { FC } from "react";
 import { BaseTab } from "./common/components/base/BaseTab";
 import { MonthlyWorkingContainer } from "./features/monthly-working/MonthlyWorkingContainer";
 import { TimeRecordContainer } from "./features/time-record/TimeRecordContainer";
 
-const RootContainer = () => {
+const RootContainer: FC = () => {
   return (
     <Box height={"800px"} width={"800px"} padding="2">
       <BaseTab

@@ -2,10 +2,11 @@ import { useToast } from "@chakra-ui/react";
 import { BaseButton } from "../../../common/components/base/BaseButton";
 import { useTimeRecord } from "../hooks/use-time-record";
 import { TimeRecordMethod } from "../../model/TimeRecordMethod";
+import { FC } from "react";
 
 const method: TimeRecordMethod = "StepIn";
 
-const StepInButton = () => {
+const StepInButton: FC = () => {
   const toast = useToast();
   return (
     <BaseButton

@@ -18,7 +18,7 @@ const useAttendanceTimes: UseAttendanceTime = ({ year, month }) => {
   if (!isYear(year) || !isMonth(month)) throw new Error();
 
   const days: Day[] = yearMonthDay[year][month];
-  const keys: string[] = days.reduce((acc, day) => {
+  const keys: string[] = days.reduce<string[]>((acc, day) => {
     return [
       ...acc,
       ...generateKeys({
@@ -28,12 +28,10 @@ const useAttendanceTimes: UseAttendanceTime = ({ year, month }) => {
         day: day.toString(),
       }),
     ];
-  }, [] as string[]);
-  const [attendanceTimes, setAttendanceTimes] = useState<Array<AttendanceTime>>(
-    []
-  );
+  }, []);
+  const [attendanceTimes, setAttendanceTimes] = useState<AttendanceTime[]>([]);
   useEffect(() => {
-    const featcher = async () => {
+    const featcher = async (): Promise<void> => {
       const attendanceTimeByMethodAndDate: Record<string, string> =
         await chrome.storage.local.get(keys);
       setAttendanceTimes(
@@ -49,10 +47,11 @@ const useAttendanceTimes: UseAttendanceTime = ({ year, month }) => {
         })
       );
     };
-    featcher();
+    featcher().catch(console.error);
   }, [year, month]);
 
-  const mutate = async () => await fetch(keys, setAttendanceTimes);
+  const mutate = async (): Promise<void> =>
+    await fetch(keys, setAttendanceTimes);
 
   return { attendanceTimes, mutate };
 };
@@ -60,7 +59,7 @@ const useAttendanceTimes: UseAttendanceTime = ({ year, month }) => {
 const fetch = async (
   keys: string[],
   setAttendanceTimes: Dispatch<SetStateAction<AttendanceTime[]>>
-) => {
+): Promise<void> => {
   const attendanceTimeByMethodAndDate: Record<string, string> =
     await chrome.storage.local.get(keys);
   setAttendanceTimes(

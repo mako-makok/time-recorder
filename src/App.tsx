@@ -1,7 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { RootContainer } from "./RootContainer";
 
-function App() {
+function App(): JSX.Element {
   return (
     <ChakraProvider>
       <RootContainer />

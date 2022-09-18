@@ -2,13 +2,14 @@ import { useToast } from "@chakra-ui/react";
 import { BaseButton } from "../../../common/components/base/BaseButton";
 import { useTimeRecord } from "../hooks/use-time-record";
 import { TimeRecordMethod } from "../../model/TimeRecordMethod";
+import { FC } from "react";
 
 const method: TimeRecordMethod = "Attendance";
 
-const AttendanceButton = () => {
+const AttendanceButton: FC = () => {
   const toast = useToast();
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     useTimeRecord(method);
 
     toast({

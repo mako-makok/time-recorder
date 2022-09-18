@@ -20,10 +20,11 @@ import {
   AttendanceTime,
   useAttendanceTimes,
 } from "../model/hooks/use-attendance-times";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { toYYYYMMDD } from "../../common/util/date-util";
+import { AttendanceTimes } from "../view-model/AttendanceTimes.type";
 
-const MonthlyWorkingContainer = () => {
+const MonthlyWorkingContainer: FC = () => {
   const now = dayjs();
   const nowYear = now.year().toString();
   const nowMonth = (now.month() + 1).toString();
@@ -87,7 +88,7 @@ type toAttendanceTimeTablePropsType = ({
   month,
   days,
 }: {
-  attendanceTimes: Array<AttendanceTime>;
+  attendanceTimes: AttendanceTime[];
   year: string;
   month: string;
   days: Day[];
@@ -98,56 +99,60 @@ const toAttendanceTimeTableProps: toAttendanceTimeTablePropsType = ({
   month,
   days,
 }) => {
-  const records = attendanceTimes.reduce((acc, attendanceTime) => {
-    const date = attendanceTime.date;
-    const attendanceTimeTableProp = acc[date];
+  const records = attendanceTimes.reduce<AttendanceTimeRecord>(
+    (acc, attendanceTime) => {
+      const date = attendanceTime.date;
+      const attendanceTimeTableProp: AttendanceTimes | undefined = acc[date];
 
-    const time = attendanceTime.hhmm;
+      const time = attendanceTime.hhmm;
 
-    if (attendanceTimeTableProp) {
+      if (attendanceTimeTableProp !== undefined) {
+        switch (attendanceTime.method) {
+          case "Attendance": {
+            acc[date].attendance = { time };
+            return acc;
+          }
+          case "Leave": {
+            acc[date].leave = { time };
+            return acc;
+          }
+          case "StepOut": {
+            acc[date].stepOut = { time };
+            return acc;
+          }
+          case "StepIn": {
+            acc[date].stepIn = { time };
+            return acc;
+          }
+        }
+      }
+
       switch (attendanceTime.method) {
         case "Attendance": {
-          acc[date].attendance = { time };
-          return acc;
+          return { ...acc, ...{ [date]: { attendance: { time } } } };
         }
         case "Leave": {
-          acc[date].leave = { time };
-          return acc;
+          return { ...acc, ...{ [date]: { leave: { time } } } };
         }
         case "StepOut": {
-          acc[date].stepOut = { time };
-          return acc;
+          return { ...acc, ...{ [date]: { stepOut: { time } } } };
         }
         case "StepIn": {
-          acc[date].stepIn = { time };
-          return acc;
+          return { ...acc, ...{ [date]: { stepIn: { time } } } };
         }
+        default:
+          throw new Error();
       }
-    }
-
-    switch (attendanceTime.method) {
-      case "Attendance": {
-        return { ...acc, ...{ [date]: { attendance: { time } } } };
-      }
-      case "Leave": {
-        return { ...acc, ...{ [date]: { leave: { time } } } };
-      }
-      case "StepOut": {
-        return { ...acc, ...{ [date]: { stepOut: { time } } } };
-      }
-      case "StepIn": {
-        return { ...acc, ...{ [date]: { stepIn: { time } } } };
-      }
-    }
-  }, {} as AttendanceTimeRecord);
-  console.log(yearMonthDay);
+    },
+    {}
+  );
   return {
-    ...days.reduce(
+    ...days.reduce<AttendanceTimeRecord>(
       (acc, day) => ({
         ...acc,
         [toYYYYMMDD({ year, month, day: day.toString() })]: {},
       }),
-      {} as AttendanceTimeRecord
+      {}
     ),
     ...records,
   };

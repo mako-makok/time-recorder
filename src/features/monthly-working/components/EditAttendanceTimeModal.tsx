@@ -1,7 +1,6 @@
 import {
   FormControl,
   FormErrorMessage,
-  FormLabel,
   HStack,
   Input,
   Modal,
@@ -15,7 +14,7 @@ import {
   VStack,
   Text,
 } from "@chakra-ui/react";
-import { createRef, RefObject, useRef, useState } from "react";
+import { createRef, FC, RefObject, useRef, useState } from "react";
 import { BaseButton } from "../../../common/components/base/BaseButton";
 import { formatHHmm } from "../../../common/util/time-format";
 import { AttendanceTime } from "../../model/AttendanceTime.type";
@@ -23,27 +22,27 @@ import { TimeRecordMethod } from "../../model/TimeRecordMethod";
 import { useUpdateAttendanceTime } from "../../model/hooks/use-update-attendance-time";
 import { AttendanceTimes } from "../../view-model/AttendanceTimes.type";
 
-type EditAttendanceTimeModalProps = {
+interface EditAttendanceTimeModalProps {
   date: string | undefined;
   times: AttendanceTimes | undefined;
   isOpen: boolean;
   onClose: () => void;
   onSaveAsync?: () => Promise<void>;
-};
-type HasErrorsState = {
+}
+interface HasErrorsState {
   attendance: boolean;
   leave: boolean;
   stepOut: boolean;
   stepIn: boolean;
-};
-const EditAttendanceTimeModal = ({
+}
+const EditAttendanceTimeModal: FC<EditAttendanceTimeModalProps> = ({
   date,
   times,
   isOpen,
   onClose,
   onSaveAsync,
-}: EditAttendanceTimeModalProps) => {
-  const refs = useRef<RefObject<HTMLInputElement>[]>([]);
+}) => {
+  const refs = useRef<Array<RefObject<HTMLInputElement>>>([]);
   const attendanceRefIndex = 0;
   const leaveRefIndex = 1;
   const stepOutRefIndex = 2;
@@ -64,7 +63,7 @@ const EditAttendanceTimeModal = ({
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement>,
     timeRecordMethod: TimeRecordMethod
-  ) => {
+  ): void => {
     const value = e.target.value;
     try {
       const formated = formatHHmm(value);
@@ -95,8 +94,8 @@ const EditAttendanceTimeModal = ({
   };
 
   const toast = useToast();
-  const handleSubmit = () => {
-    if (!date) return;
+  const handleSubmit = (): void => {
+    if (date === undefined) return;
 
     if (
       hasErrors.attendance ||
@@ -104,13 +103,14 @@ const EditAttendanceTimeModal = ({
       hasErrors.stepOut ||
       hasErrors.stepIn
     ) {
-      return toast({
+      toast({
         title: "不正な入力があります",
         status: "error",
         position: "top",
         duration: 1500,
         isClosable: true,
       });
+      return;
     }
     const attendanceHHmm = refs.current[attendanceRefIndex].current?.value;
     const leaveHHmm = refs.current[leaveRefIndex].current?.value;
@@ -121,22 +121,31 @@ const EditAttendanceTimeModal = ({
       {
         method: "Attendance",
         date,
-        hhmm: attendanceHHmm ? attendanceHHmm : "",
+        hhmm: attendanceHHmm === undefined ? "" : attendanceHHmm,
       },
-      { method: "Leave", date, hhmm: leaveHHmm ? leaveHHmm : "" },
-      { method: "StepOut", date, hhmm: stepOutHHmm ? stepOutHHmm : "" },
-      { method: "StepIn", date, hhmm: stepInHHmm ? stepInHHmm : "" },
+      { method: "Leave", date, hhmm: leaveHHmm === undefined ? "" : leaveHHmm },
+      {
+        method: "StepOut",
+        date,
+        hhmm: stepOutHHmm === undefined ? "" : stepOutHHmm,
+      },
+      {
+        method: "StepIn",
+        date,
+        hhmm: stepInHHmm === undefined ? "" : stepInHHmm,
+      },
     ];
 
-    (async () => {
+    (async (): Promise<void> => {
       await Promise.all(useUpdateAttendanceTime(records));
-      onSaveAsync && (await onSaveAsync());
+      onSaveAsync != null && (await onSaveAsync());
       await onClose();
-    })();
+    })().catch(console.error);
   };
+
   return (
     <>
-      {date && times && (
+      {date !== undefined && times != null && (
         <Modal
           initialFocusRef={refs.current[0]}
           isOpen={isOpen}

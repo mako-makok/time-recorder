@@ -1,11 +1,11 @@
-type Time = {
+interface Time {
   time: string;
-};
-type AttendanceTimes = {
+}
+interface AttendanceTimes {
   attendance?: Time;
   leave?: Time;
   stepOut?: Time;
   stepIn?: Time;
-};
+}
 
 export type { AttendanceTimes };

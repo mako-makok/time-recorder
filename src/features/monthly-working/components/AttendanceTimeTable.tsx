@@ -15,28 +15,28 @@ import {
 import { EditIcon } from "@chakra-ui/icons";
 
 import { EditAttendanceTimeModal } from "./EditAttendanceTimeModal";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { AttendanceTimes } from "../../view-model/AttendanceTimes.type";
 import dayjs from "dayjs";
 
 type AttendanceTimeRecord = Record<string, AttendanceTimes>;
-type AttendanceTimeTableProps = {
+interface AttendanceTimeTableProps {
   timeByDate: AttendanceTimeRecord;
   mutate: () => Promise<void>;
-};
-type CurrentTimesState = {
+}
+interface CurrentTimesState {
   date: string;
   times: AttendanceTimes;
-};
-const AttendanceTimeTable = ({
+}
+const AttendanceTimeTable: FC<AttendanceTimeTableProps> = ({
   timeByDate,
   mutate,
-}: AttendanceTimeTableProps) => {
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: false });
   const [currentTimes, setCurrentTimes] = useState<
     CurrentTimesState | undefined
   >(undefined);
-  const handleClick = (date: string, times: AttendanceTimes) => {
+  const handleClick = (date: string, times: AttendanceTimes): void => {
     setCurrentTimes({ date, times });
     onOpen();
   };

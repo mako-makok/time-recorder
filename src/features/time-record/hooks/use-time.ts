@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useTime = (interval: number) => {
+const useTime = (interval: number): number => {
   const [time, updateTime] = useState(Date.now());
 
   useEffect(() => {
